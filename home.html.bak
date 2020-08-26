@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.topnav {
+  overflow: hidden;
+  background-color: #e9e9e9;
+}
+
+
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #2196F3;
+  color: white;
+}
+
+.topnav input[type=text] {
+  float: left;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  border: none;
+  font-size: 17px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+
+<h2>Weather App</h2>
+<div class=topnav>
+  <form> <input type="text" placeholder="Search ZIP CODE.." name="zip_code">
+    <button type="submit" name="Search" onclick="printtemp()"></button>
+    <p >{{ temp }}</p>
+  </form>
+
+</div>
+<table>
+  <tr>
+    <th>Zip Code</th>
+    <th>City_Name</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+    <th>Unit</th>
+    <th>Update</th>
+  </tr>
+  {% for key in dataframe %}
+  <tr>
+    <td>{{ key }}</td>
+    
+    <td>{{ dataframe[key]["city_name"] }}</td>
+    <td id="{{key}}">{{ dataframe[key]["temp"] }}</td>
+    <td>{{ dataframe[key]["humidity"] }}</td>
+    
+    <td>
+    <select onchange="change_function(5)" id="dropdown">        
+                <option value="C"  selected>C</option>
+                <option value="F">F</option>
+                
+        </select></td>
+    <td>
+    <select onchange="sendRequest(67)" id="update" >        
+                <option value="0" >0</option>
+                <option value="1"selected >1</option>
+                
+        </select></td>
+  </tr>
+  {% endfor %}
+  
+</table>
+<script>
+
+var formData = new FormData();
+function change_function(key){
+console.log(key);
+key=key.toString()
+var ch=key.concat("dropdown");
+//alert(typeof(ch));
+
+if (document.getElementById(ch).value=="F"){
+ 
+document.getElementById(key).innerHTML=((document.getElementById(key).innerHTML*1.8)+32).toFixed(2);
+}
+if (document.getElementById(ch).value=="C"){
+document.getElementById(key).innerHTML=((document.getElementById(key).innerHTML-32)/1.8).toFixed(2);
+
+}
+}
+
+function sendRequest(key){
+
+formData.append("user",key);
+var xhttp = new XMLHttpRequest();
+xhttp.open('POST', 'http://127.0.0.1:5000/city');
+xhttp.setRequestHeader('Content-Type','application/json');
+console.log((xhttp.getRequestHeader()));
+xhttp.send(JSON.stringify({"kalia":123}));
+
+}
+
+
+</script>
+
+</body>
+</html>
